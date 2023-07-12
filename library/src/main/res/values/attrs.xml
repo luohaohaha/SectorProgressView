@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SectorProgressView">
+        <attr name="fgColor" format="color" />
+        <attr name="bgColor" format="color" />
+        <attr name="strokeWidth" format="dimension" />
+        <attr name="percent" format="float" />
+        <attr name="startAngle" format="float" />
+        <attr name="sweepMode" format="enum">
+            <enum name="obverse" value="0" />
+            <enum name="reverse" value="1" />
+        </attr>
+    </declare-styleable>
+
+</resources>
