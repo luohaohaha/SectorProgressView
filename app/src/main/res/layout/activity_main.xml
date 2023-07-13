@@ -35,8 +35,8 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                app:bgColor="#cc000000"
-                app:fgColor="#cc000000"
+                app:backgroundColor="#cc000000"
+                app:progressColor="#cc000000"
                 app:startAngle="0"
                 app:strokeWidth="3dp"
                 app:sweepMode="obverse" />
@@ -49,7 +49,7 @@
                 android:background="@drawable/drawable_round_corner"
                 android:padding="12dp"
                 android:src="@drawable/baseline_file_download_24"
-                app:bgColor="@android:color/transparent" />
+               />
 
         </FrameLayout>
 
@@ -90,8 +90,8 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                app:bgColor="#cc000000"
-                app:fgColor="#cc000000"
+                app:backgroundColor="#cc000000"
+                app:progressColor="#cc000000"
                 app:startAngle="0"
                 app:strokeWidth="3dp"
                 app:sweepMode="reverse" />
@@ -104,7 +104,7 @@
                 android:background="@drawable/drawable_round_corner"
                 android:padding="12dp"
                 android:src="@drawable/baseline_file_download_24"
-                app:bgColor="@android:color/transparent" />
+                />
 
         </FrameLayout>
 

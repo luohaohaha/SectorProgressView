@@ -2,10 +2,10 @@
 <resources>
 
     <declare-styleable name="SectorProgressView">
-        <attr name="fgColor" format="color" />
-        <attr name="bgColor" format="color" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="progressColor" format="color" />
         <attr name="strokeWidth" format="dimension" />
-        <attr name="percent" format="float" />
+        <attr name="progress" format="float" />
         <attr name="startAngle" format="float" />
         <attr name="roundCorner" format="dimension" />
         <attr name="sweepMode" format="enum">

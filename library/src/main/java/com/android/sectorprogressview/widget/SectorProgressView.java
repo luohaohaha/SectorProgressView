@@ -28,10 +28,15 @@ public class SectorProgressView extends View {
     private float mStrokeWidth;
 
     private float mRoundCorner;
+    private int mSweepMode = 0;
 
     private static final int SWEEP_MODE_OBVERSE = 0;
     private static final int SWEEP_MODE_REVERSE = 1;
-    private int mSweepMode = 0;
+
+    private static final int DEFAULT_ANGLE_OFFSET = 270;
+    private static final int DEFAULT_STROKE_WIDTH = 1;
+    private static final int DEFAULT_ROUND_CORNER = 8;
+    private static final int DEFAULT_BACKGROUND_COLOR = 0XCC000000;
 
 
     public SectorProgressView(Context context, AttributeSet attrs) {
@@ -41,12 +46,12 @@ public class SectorProgressView extends View {
                 0, 0);
 
         try {
-            bgColor = a.getColor(R.styleable.SectorProgressView_bgColor, 0xffe5e5e5);
-            fgColor = a.getColor(R.styleable.SectorProgressView_fgColor, 0xffff765c);
-            progress = a.getFloat(R.styleable.SectorProgressView_percent, 0);
-            startAngle = a.getFloat(R.styleable.SectorProgressView_startAngle, 0) + 270;
-            mStrokeWidth = a.getDimensionPixelSize(R.styleable.SectorProgressView_strokeWidth, dp2px(1));
-            mRoundCorner = a.getDimensionPixelSize(R.styleable.SectorProgressView_roundCorner, dp2px(8));
+            bgColor = a.getColor(R.styleable.SectorProgressView_backgroundColor, DEFAULT_BACKGROUND_COLOR);
+            fgColor = a.getColor(R.styleable.SectorProgressView_progressColor, DEFAULT_BACKGROUND_COLOR);
+            progress = a.getFloat(R.styleable.SectorProgressView_progress, 0);
+            startAngle = a.getFloat(R.styleable.SectorProgressView_startAngle, 0) + DEFAULT_ANGLE_OFFSET;
+            mStrokeWidth = a.getDimensionPixelSize(R.styleable.SectorProgressView_strokeWidth, dp2px(DEFAULT_STROKE_WIDTH));
+            mRoundCorner = a.getDimensionPixelSize(R.styleable.SectorProgressView_roundCorner, dp2px(DEFAULT_ROUND_CORNER));
             mSweepMode = a.getInt(R.styleable.SectorProgressView_sweepMode, SWEEP_MODE_OBVERSE);
 
         } finally {
