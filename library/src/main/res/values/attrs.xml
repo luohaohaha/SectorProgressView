@@ -7,6 +7,7 @@
         <attr name="strokeWidth" format="dimension" />
         <attr name="percent" format="float" />
         <attr name="startAngle" format="float" />
+        <attr name="roundCorner" format="dimension" />
         <attr name="sweepMode" format="enum">
             <enum name="obverse" value="0" />
             <enum name="reverse" value="1" />

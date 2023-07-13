@@ -27,6 +27,8 @@ public class SectorProgressView extends View {
 
     private float mStrokeWidth;
 
+    private float mRoundCorner;
+
     private static final int SWEEP_MODE_OBVERSE = 0;
     private static final int SWEEP_MODE_REVERSE = 1;
     private int mSweepMode = 0;
@@ -41,9 +43,10 @@ public class SectorProgressView extends View {
         try {
             bgColor = a.getColor(R.styleable.SectorProgressView_bgColor, 0xffe5e5e5);
             fgColor = a.getColor(R.styleable.SectorProgressView_fgColor, 0xffff765c);
-            percent = a.getFloat(R.styleable.SectorProgressView_percent, 0);
+            progress = a.getFloat(R.styleable.SectorProgressView_percent, 0);
             startAngle = a.getFloat(R.styleable.SectorProgressView_startAngle, 0) + 270;
             mStrokeWidth = a.getDimensionPixelSize(R.styleable.SectorProgressView_strokeWidth, dp2px(1));
+            mRoundCorner = a.getDimensionPixelSize(R.styleable.SectorProgressView_roundCorner, dp2px(8));
             mSweepMode = a.getInt(R.styleable.SectorProgressView_sweepMode, SWEEP_MODE_OBVERSE);
 
         } finally {
@@ -55,10 +58,10 @@ public class SectorProgressView extends View {
 
     private void init() {
 
-        bgPaint = new Paint();
+        bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         bgPaint.setColor(bgColor);
 
-        fgPaint = new Paint();
+        fgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         fgPaint.setColor(fgColor);
         setLayerType(LAYER_TYPE_HARDWARE, null);
     }
@@ -84,15 +87,15 @@ public class SectorProgressView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawRoundRect(oval, dp2px(8), dp2px(8), bgPaint);
+        canvas.drawRoundRect(oval, mRoundCorner, mRoundCorner, bgPaint);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         canvas.drawCircle(oval.right / 2, oval.bottom / 2, oval.right / 2 - mStrokeWidth, paint);
-        Log.d("onDraw", "oval == "+oval.toString());
+        Log.d("onDraw", "oval == " + oval.toString());
         if (mSweepMode == SWEEP_MODE_OBVERSE) {
-            canvas.drawArc(oval.left+mStrokeWidth+10,oval.top+mStrokeWidth+10,oval.right-mStrokeWidth-10,oval.bottom-mStrokeWidth-10, startAngle, percent * 3.6f, true, fgPaint);
+            canvas.drawArc(oval.left + mStrokeWidth*2, oval.top + mStrokeWidth*2, oval.right - mStrokeWidth*2, oval.bottom -mStrokeWidth*2, startAngle, progress * 3.6f, true, fgPaint);
         } else {
-            canvas.drawArc(oval.left+mStrokeWidth+10,oval.top+mStrokeWidth+10,oval.right-mStrokeWidth-10,oval.bottom-mStrokeWidth-10,startAngle, -(100 - percent) * 3.6f, true, fgPaint);
+            canvas.drawArc(oval.left + mStrokeWidth*2, oval.top + mStrokeWidth*2, oval.right - mStrokeWidth*2, oval.bottom - mStrokeWidth*2, startAngle, -(100 - progress) * 3.6f, true, fgPaint);
         }
     }
 
@@ -122,7 +125,7 @@ public class SectorProgressView extends View {
         requestLayout();
     }
 
-    private float percent;
+    private float progress;
 
     public float getStartAngle() {
         return startAngle;
@@ -134,12 +137,12 @@ public class SectorProgressView extends View {
         requestLayout();
     }
 
-    public float getPercent() {
-        return percent;
+    public float getProgress() {
+        return progress;
     }
 
-    public void setPercent(float percent) {
-        this.percent = percent;
+    public void setProgress(float progress) {
+        this.progress = progress;
         invalidate();
         requestLayout();
     }
