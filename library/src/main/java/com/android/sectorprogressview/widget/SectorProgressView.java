@@ -97,11 +97,7 @@ public class SectorProgressView extends View {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         canvas.drawCircle(oval.right / 2, oval.bottom / 2, oval.right / 2 - mStrokeWidth, paint);
         Log.d("onDraw", "oval == " + oval.toString());
-        if (mSweepMode == SWEEP_MODE_OBVERSE) {
-            canvas.drawArc(oval.left + mStrokeWidth*2, oval.top + mStrokeWidth*2, oval.right - mStrokeWidth*2, oval.bottom -mStrokeWidth*2, startAngle, progress * 3.6f, true, fgPaint);
-        } else {
-            canvas.drawArc(oval.left + mStrokeWidth*2, oval.top + mStrokeWidth*2, oval.right - mStrokeWidth*2, oval.bottom - mStrokeWidth*2, startAngle, -(100 - progress) * 3.6f, true, fgPaint);
-        }
+        canvas.drawArc(oval.left + mStrokeWidth * 2, oval.top + mStrokeWidth * 2, oval.right - mStrokeWidth * 2, oval.bottom - mStrokeWidth * 2, startAngle, ((SWEEP_MODE_OBVERSE == mSweepMode) ? progress : -(100 - progress)) * 3.6f, true, fgPaint);
     }
 
     public int getBgColor() {
