@@ -22,3 +22,17 @@
  <enum name="reverse" value="1" />
 </attr>
 ```
+
+## Android xml
+```
+  <com.android.sectorprogressview.widget.SectorProgressView
+                android:id="@+id/progress_view_reverse"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                app:backgroundColor="#cc000000"
+                app:progressColor="#cc000000"
+                app:startAngle="0"
+                app:strokeWidth="3dp"
+                app:sweepMode="reverse" />
+```
