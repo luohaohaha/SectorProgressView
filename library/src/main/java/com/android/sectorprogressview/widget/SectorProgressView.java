@@ -11,25 +11,13 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 
 public class SectorProgressView extends View {
-    private int bgColor;
-    private int fgColor;
-    private Paint bgPaint;
-    private Paint fgPaint;
-    private RectF oval;
 
-    private ObjectAnimator animator;
-
-    private float mStrokeWidth;
-
-    private float mRoundCorner;
-    private int mSweepMode = 0;
-
+    private  static final  String TAG = "SectorProgressView";
     private static final int SWEEP_MODE_OBVERSE = 0;
     private static final int SWEEP_MODE_REVERSE = 1;
 
@@ -37,6 +25,24 @@ public class SectorProgressView extends View {
     private static final int DEFAULT_STROKE_WIDTH = 1;
     private static final int DEFAULT_ROUND_CORNER = 8;
     private static final int DEFAULT_BACKGROUND_COLOR = 0XCC000000;
+    private int mBackgroundColor;
+    private int mProgressColor;
+    private Paint mBackgroundPaint;
+    private Paint mProgressPaint;
+
+    private Paint mCirclePaint;
+    private RectF mOval;
+
+    private ObjectAnimator mAnimator;
+
+    private float mStrokeWidth;
+
+    private float mRoundCorner;
+    private int mSweepMode ;
+
+    private float mProgress;
+
+    private float mStartAngle;
 
 
     public SectorProgressView(Context context, AttributeSet attrs) {
@@ -46,10 +52,10 @@ public class SectorProgressView extends View {
                 0, 0);
 
         try {
-            bgColor = a.getColor(R.styleable.SectorProgressView_backgroundColor, DEFAULT_BACKGROUND_COLOR);
-            fgColor = a.getColor(R.styleable.SectorProgressView_progressColor, DEFAULT_BACKGROUND_COLOR);
-            progress = a.getFloat(R.styleable.SectorProgressView_progress, 0);
-            startAngle = a.getFloat(R.styleable.SectorProgressView_startAngle, 0) + DEFAULT_ANGLE_OFFSET;
+            mBackgroundColor = a.getColor(R.styleable.SectorProgressView_backgroundColor, DEFAULT_BACKGROUND_COLOR);
+            mProgressColor = a.getColor(R.styleable.SectorProgressView_progressColor, DEFAULT_BACKGROUND_COLOR);
+            mProgress = a.getFloat(R.styleable.SectorProgressView_progress, 0);
+            mStartAngle = a.getFloat(R.styleable.SectorProgressView_startAngle, 0) + DEFAULT_ANGLE_OFFSET;
             mStrokeWidth = a.getDimensionPixelSize(R.styleable.SectorProgressView_strokeWidth, dp2px(DEFAULT_STROKE_WIDTH));
             mRoundCorner = a.getDimensionPixelSize(R.styleable.SectorProgressView_roundCorner, dp2px(DEFAULT_ROUND_CORNER));
             mSweepMode = a.getInt(R.styleable.SectorProgressView_sweepMode, SWEEP_MODE_OBVERSE);
@@ -63,11 +69,15 @@ public class SectorProgressView extends View {
 
     private void init() {
 
-        bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        bgPaint.setColor(bgColor);
+        mBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mBackgroundPaint.setColor(mBackgroundColor);
 
-        fgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        fgPaint.setColor(fgColor);
+        mProgressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mProgressPaint.setColor(mProgressColor);
+
+        mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mCirclePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+
         setLayerType(LAYER_TYPE_HARDWARE, null);
     }
 
@@ -85,38 +95,41 @@ public class SectorProgressView extends View {
         float wwd = (float) w - xpad;
         float hhd = (float) h - ypad;
 
-        oval = new RectF(getPaddingLeft(), getPaddingTop(), getPaddingLeft() + wwd, getPaddingTop() + hhd);
+        mOval = new RectF(getPaddingLeft(), getPaddingTop(), getPaddingLeft() + wwd, getPaddingTop() + hhd);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawRoundRect(oval, mRoundCorner, mRoundCorner, bgPaint);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        canvas.drawCircle(oval.right / 2, oval.bottom / 2, oval.right / 2 - mStrokeWidth, paint);
-        Log.d("onDraw", "oval == " + oval.toString());
-        canvas.drawArc(oval.left + mStrokeWidth * 2, oval.top + mStrokeWidth * 2, oval.right - mStrokeWidth * 2, oval.bottom - mStrokeWidth * 2, startAngle, ((SWEEP_MODE_OBVERSE == mSweepMode) ? progress : -(100 - progress)) * 3.6f, true, fgPaint);
+        //draw background
+        canvas.drawRoundRect(mOval, mRoundCorner, mRoundCorner, mBackgroundPaint);
+
+        //draw stroke ( transparent circle )
+        canvas.drawCircle(mOval.right / 2, mOval.bottom / 2, mOval.right / 2 - mStrokeWidth, mCirclePaint);
+
+        //draw progress
+        canvas.drawArc(mOval.left + mStrokeWidth * 2, mOval.top + mStrokeWidth * 2, mOval.right - mStrokeWidth * 2, mOval.bottom - mStrokeWidth * 2, mStartAngle, ((SWEEP_MODE_OBVERSE == mSweepMode) ? mProgress : -(100 - mProgress)) * 3.6f, true, mProgressPaint);
     }
 
-    public int getBgColor() {
-        return bgColor;
+    public int getBackgroundColor() {
+        return mBackgroundColor;
     }
 
-    public void setBgColor(int bgColor) {
-        this.bgColor = bgColor;
-        bgPaint.setColor(bgColor);
+    public void setBackgroundColor(int mBackgroundColor) {
+        super.setBackgroundColor(mBackgroundColor);
+        this.mBackgroundColor = mBackgroundColor;
+        mBackgroundPaint.setColor(mBackgroundColor);
         refreshTheLayout();
     }
 
-    public int getFgColor() {
-        return fgColor;
+    public int getProgressColor() {
+        return mProgressColor;
     }
 
-    public void setFgColor(int fgColor) {
-        this.fgColor = fgColor;
-        fgPaint.setColor(fgColor);
+    public void setProgressColor(int mProgressColor) {
+        this.mProgressColor = mProgressColor;
+        mProgressPaint.setColor(mProgressColor);
         refreshTheLayout();
     }
 
@@ -126,48 +139,44 @@ public class SectorProgressView extends View {
         requestLayout();
     }
 
-    private float progress;
 
     public float getStartAngle() {
-        return startAngle;
+        return mStartAngle;
     }
 
-    public void setStartAngle(float startAngle) {
-        this.startAngle = startAngle + 270;
+    public void setStartAngle(float mStartAngle) {
+        this.mStartAngle = mStartAngle + 270;
         invalidate();
         requestLayout();
     }
 
     public float getProgress() {
-        return progress;
+        return mProgress;
     }
 
-    public void setProgress(float progress) {
-        this.progress = progress;
+    public void setProgress(float mProgress) {
+        this.mProgress = mProgress;
         invalidate();
         requestLayout();
     }
-
-    private float startAngle;
 
     public void animateIndeterminate() {
         animateIndeterminate(800, new AccelerateDecelerateInterpolator());
     }
 
-    public void animateIndeterminate(int durationOneCircle,
-                                     TimeInterpolator interpolator) {
-        animator = ObjectAnimator.ofFloat(this, "startAngle", getStartAngle(), getStartAngle() + 360);
-        if (interpolator != null) animator.setInterpolator(interpolator);
-        animator.setDuration(durationOneCircle);
-        animator.setRepeatCount(ValueAnimator.INFINITE);
-        animator.setRepeatMode(ValueAnimator.RESTART);
-        animator.start();
+    public void animateIndeterminate(int durationOneCircle, TimeInterpolator interpolator) {
+        mAnimator = ObjectAnimator.ofFloat(this, "startAngle", getStartAngle(), getStartAngle() + 360);
+        if (interpolator != null) mAnimator.setInterpolator(interpolator);
+        mAnimator.setDuration(durationOneCircle);
+        mAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        mAnimator.setRepeatMode(ValueAnimator.RESTART);
+        mAnimator.start();
     }
 
     public void stopAnimateIndeterminate() {
-        if (animator != null) {
-            animator.cancel();
-            animator = null;
+        if (mAnimator != null) {
+            mAnimator.cancel();
+            mAnimator = null;
         }
     }
 }
